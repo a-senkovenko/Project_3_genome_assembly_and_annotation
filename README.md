@@ -46,7 +46,7 @@ jellyfish histo counts.jf > k-mer.txt
 ```
 Parameters for visualisation: k-mer length = 31, read length = 90, max k-mer coverage = 1000.
 
-"----picture----"
+![GenomeScope output](images/Genomescope.png)
 
 
 ## Step 3. Assembling E. coli genome from paired reads with SPAdes
@@ -143,10 +143,9 @@ quast.py ./genome_assembly/contigs.fasta
 ```
 It makes new directory with report in current directory. Report is saved in .txt, .tsv, .html, .pdf etc. 
 
-"----picture----"
+![QUAST report](images/quast_illumina.png)
 
 ### Effect of read correction
-
 
 ## Step 4. Impact of long reads
 
@@ -179,7 +178,7 @@ Your data seems to have high uniform coverage depth. It is strongly recommended 
 ```
 Option "**--isolate**" was omitted to get corrected libraries.
 
----picture---
+![quast_hybrid](images/quast_hybrid.png)
 
 The quality was improved because of...
 
@@ -193,8 +192,6 @@ prokka --outdir ./annotated_genome/ --prefix hybrid_annotation --centre CDC ./li
 ```
 IMPORTANT NOTE:  
 If error "Prokka needs blastp 2.2 or higher" occurs, find file ~/miniconda3/envs/envname/bin/prokka and make the following changes:
-
----picture---
 
 ## Step 6. Search for the closest relative
 
@@ -223,7 +220,7 @@ To restrict our search to only those genomes that were present in the GenBank da
 1900/01/01:2011/01/01[PDAT]
 ```
 
----picture---
+![BLAST ouptut](images/BLAST_result.png)
 
 Click on the “Sequence ID” link under the name of the identified reference in order to open its corresponding GenBank page. Download the genome sequence in FASTA format (in the right upper corner select ”Send” - “Complete Record” - “File” – “Fasta”, and save as “55989.fasta”)
 
@@ -244,10 +241,10 @@ Move files 55989.fasta (our reference) and .gbk file with our annotation into se
 How to use Mauve:
 "File" → "Align with progressiveMauve..." → "Add sequences" → select reference.fasta + annotation.gbk → "Start".  
 
----picture---#картинка с выравниванием  
+![Mauve align](images/Mauve_align.png)
 
 Select "Product" and enter keyword "Shiga" to search HUS-related genes.
----picture---#картинка с поиском генов
+![Mauve search](images/Mauve_search.png)
 
 
 ## Step 8. Where is the origin
