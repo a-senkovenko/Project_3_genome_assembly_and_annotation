@@ -17,8 +17,8 @@ Fastq run to check the quality:
 ```bash
 fastqc ./SRR292678sub_S1_L001_R1_001.fastq.gz ./SRR292678sub_S1_L001_R2_001.fastq.gz -o ./output_fastq/
 ```
-Everything is fine, there is a small deviation from theoretical distribution of GC content. Html files are applied to this report.
-Number of forward and reverse reads: 5499346.
+Everything is fine, there is a small deviation from theoretical distribution of GC content. Html files are applied to this report.  
+Forward and reverse read count: 5499346.
 
 ## Step 2. K-mer profile and genome size estimation
 
@@ -38,15 +38,29 @@ Total:     659921520
 Max_count: 2250
 ```
 
-Everything is fine, file isn't empty, hash size was sufficient.
-Use histo command and make .txt file to build histogram. We will use [GenomeScope](http://genomescope.org/) for visualization.
+Everything is fine, file isn't empty.  
+Run histo command and make .txt file to build histogram.  
+In this case, use [GenomeScope](http://genomescope.org/) for visualization.
 
 ```bash
 jellyfish histo counts.jf > k-mer.txt
 ```
 Parameters for visualisation: k-mer length = 31, read length = 90, max k-mer coverage = 1000.
 
-![GenomeScope output](images/Genomescope.png)
+![GenomeScope output](images/Genomescope.jpg)
+
+Estimate genome size following these formulas:  
+N = (M*L)/(L-K+1)  
+Genome_size = T/N   
+- N – depth of coverage, 
+- M – k-mer peak(62), 
+- K – k-mer size(31), 
+- L – average read length(90), 
+- T – total bases.
+
+In this case:  
+N = (62*90)/(90-31+1) = 93  
+Genome_size = 494900000/93 = 5321505.
 
 
 ## Step 3. Assembling E. coli genome from paired reads with SPAdes
@@ -73,7 +87,7 @@ spades.py --isolate -1 ./SRR292678sub_S1_L001_R1_001.fastq.gz -2 ./SRR292678sub_
 ```
 For the subsequent analysis we will be interested only in the “contigs.fasta” and “scaffolds.fasta” files, which define contigs and scaffolds for the E. coli assembly, respectively.
 
-These files are present in our SPAdes output location, so everything is ok.
+These files are present in SPAdes output location.
 
 ### QUAST installation and quality assessment of contigs
 
@@ -82,6 +96,9 @@ Check QUAST page on [sourceforge](https://quast.sourceforge.net/).
 conda install -c bioconda quast
 ```
 However, our current Python version is 3.14 is incompatible with QUAST:
+
+<details>
+   <summary>Compatability issues</summary>
 
 ```bash
 Could not solve for environment specs
@@ -121,6 +138,8 @@ The following packages are incompatible
 Pins seem to be involved in the conflict. Currently pinned specs:
  - python=3.14
 ```
+</details>  
+
 Therefore, try to make new environment with python 3.13 and install QUAST 5.3.0. Do not uninstall and reinstall python in current env, it can corrupt some dependent packages.
 
 ```bash
@@ -129,27 +148,26 @@ conda install -c bioconda quast
 ```
 
 You can also install additional tools for this version of QUAST.
-
+<details>
 * GRIDSS (needed for structural variants detection)                                                                                                                                                 
 * SILVA 16S rRNA database (needed for reference genome detection in metagenomic datasets)                                                                                                                
 * BUSCO tools and databases (needed for searching BUSCO genes) -- works in Linux only! 
 
 But these packages are not related to our task and don't install them.
+</details>  
 
 Run QUAST
 
 ```bash
 quast.py ./genome_assembly/contigs.fasta 
 ```
-It makes new directory with report in current directory. Report is saved in .txt, .tsv, .html, .pdf etc. 
+Report is saved in .txt, .tsv, .html, .pdf etc. 
 
-![QUAST report](images/quast_illumina.png)
-
-### Effect of read correction
+![QUAST report](images/quast_illumina.jpg)
 
 ## Step 4. Impact of long reads
 
-Make a comparison of PacBio long read library (~20000 bp) and our assembly based on Illumina library.
+Make a comparison of PacBio long read library (~20000 bp) and assembly based on Illumina library.
 
 ### Get the PacBio library
 
@@ -178,13 +196,13 @@ Your data seems to have high uniform coverage depth. It is strongly recommended 
 ```
 Option "**--isolate**" was omitted to get corrected libraries.
 
-![quast_hybrid](images/quast_hybrid.png)
+![QUAST hybrid](images/quast_hybrid.jpg)
 
 The quality was improved because of...
 
 ## Step 5. Genome annotation
 
-Install Prokka (version 1.13) and run it on hybrid assembly.
+Install [Prokka](https://github.com/tseemann/prokka) (version 1.13) and run it on hybrid assembly.
 
 ```bash
 conda install prokka -c bioconda
@@ -192,6 +210,10 @@ prokka --outdir ./annotated_genome/ --prefix hybrid_annotation --centre CDC ./li
 ```
 IMPORTANT NOTE:  
 If error "Prokka needs blastp 2.2 or higher" occurs, find file ~/miniconda3/envs/envname/bin/prokka and make the following changes:
+
+- Find **blastp** and **makeblastdb**
+- Change parameter MINVER: 2.2 -> 2.0
+- Save and exit
 
 ## Step 6. Search for the closest relative
 
@@ -220,7 +242,7 @@ To restrict our search to only those genomes that were present in the GenBank da
 1900/01/01:2011/01/01[PDAT]
 ```
 
-![BLAST ouptut](images/BLAST_result.png)
+![BLAST ouptut](images/BLAST_result.jpg)
 
 Click on the “Sequence ID” link under the name of the identified reference in order to open its corresponding GenBank page. Download the genome sequence in FASTA format (in the right upper corner select ”Send” - “Complete Record” - “File” – “Fasta”, and save as “55989.fasta”)
 
@@ -246,6 +268,8 @@ How to use Mauve:
 Select "Product" and enter keyword "Shiga" to search HUS-related genes.
 ![Mauve search](images/Mauve_search.png)
 
+![Beta-lactam](images/stxA.jpg)
+![Beta-lactam](images/stxB.jpg)
 
 ## Step 8. Where is the origin
 
@@ -269,10 +293,11 @@ Therefore, the source of shiga-toxin within our E.coli strain is a phage infecti
 
 To search for genes responsible for antibiotic resistance, we will use ResFinder (http://genepi.food.dtu.dk/resfinder), which specifically searches a database of genes implicated in antibiotic resistance, identifying similarities between the sequenced genome and this database using local alignment.
 
-Search result:
----picture---
+Search result:  
+![Antibiotics](images/resistance.png)
 
-As the search shows: E.coli X developed resistance mostly against beta-lactam antibiotics.
+As the search shows: E.coli X developed resistance mostly against beta-lactam antibiotics from CTX-M and TEM families.
+
 
 ## Step 10. Antibiotic resistance mechanism
 
