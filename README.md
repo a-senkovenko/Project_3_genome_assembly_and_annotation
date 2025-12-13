@@ -60,7 +60,7 @@ Genome_size = T/N
 
 In this case:  
 N = (62*90)/(90-31+1) = 93  
-Genome_size = 494900000/93 = 5321505.
+Genome_size = 494900000/93 = 5321505 bp.
 
 
 ## Step 3. Assembling E. coli genome from paired reads with SPAdes
@@ -198,7 +198,13 @@ Option "**--isolate**" was omitted to get corrected libraries.
 
 ![QUAST hybrid](images/quast_hybrid.jpg)
 
-The quality was improved because of...
+The quality was improved:
+- nearly 8-fold reduction of contig count;
+- largest contig is around 3 times longer than in previous assenbly;
+- N50 is higher.
+
+Therefore, overall continuity of the second assembly is higher.
+
 
 ## Step 5. Genome annotation
 
@@ -232,11 +238,11 @@ barrnap -o ./barrnap_output/rrna.fa < ./library/hybrid_assembly/contigs.fasta > 
 
 ### BLAST search
 
-rRNA genes in bacteria are typically organized in ribosomal operons – set of closely located genes that are activated together. Ribosomal RNA plays a crucial role in protein synthesis, and in order to achieve high growth rate bacteria often possess several copies of this operon. That is why you will probably get several matches here.   
+rRNA genes in bacteria are typically organized in ribosomal operons. As it plays crucial role in protein synthesis, cells usually contain several copies of them. We will use 16s rRNa as our target gene for search. 
 
-We will now use BLAST to search for the genome in the RefSeq database with 16S rRNA that is most similar to the 16S rRNA that we just found. Open the  NCBI BLAST homepage (http://blast.ncbi.nlm.nih.gov) and select “Nucleotide blast”. To perform the search against complete genomes in the RefSeq database, select the “Reference Genome Database (refseq_genomes)” in the “Database” field, and Escherichia coli in the “Organism” field.   
+Open the  NCBI BLAST homepage (http://blast.ncbi.nlm.nih.gov) and select “Nucleotide blast”. To perform the search against complete genomes in the RefSeq database, select the “Reference Genome Database (refseq_genomes)” in the “Database” field, and Escherichia coli in the “Organism” field.   
 
-To restrict our search to only those genomes that were present in the GenBank database at the beginning of 2011, set the time range using parameter PDAT in the "Entrez Query" field:
+Set the time range using parameter PDAT in the "Entrez Query" field and filter only time-relevant results for our strain:
 
 ```
 1900/01/01:2011/01/01[PDAT]
@@ -301,26 +307,43 @@ As the search shows: E.coli X developed resistance mostly against beta-lactam an
 
 ## Step 10. Antibiotic resistance mechanism
 
-Try to find **bla** genes associated with beta-lactam resistance with Mauve.
+### What exactly provides beta-lactamase resistance?
 
-There are two genes:
-```
-bla1
-Class A beta-lactamase Class A beta-lactamase (EC 3.5.2.6) => CTX-M family,
-extended-spectrum
+Try to find **bla** genes associated with beta-lactamase production in Mauve.
 
-bla 2
-Class A beta-lactamase (EC 3.5.2.6) => TEM family
-```
----picture---
+There are three results:
 
-These results are consistent with ResFinder search; the same families of **bla** were found.
+![bla1](images/bla1.jpg)
+![bla2](images/bla2.jpg)
+![bla3](images/bla3.jpg)
 
+**bla1** and **bla2** are copies of the same sequence (TEM family).
+Product:[UniProtKB:P62593](https://www.uniprot.org/uniprotkb/P62593/entry).
+
+**bla3** CTX-M-1, class A beta-lactamase family.   
+Product:[UniProtKB:P28585](https://www.uniprot.org/uniprotkb/P28585/entry).
+
+These results are consistent with ResFinder search results; the same families of **bla** were found.
+
+### How could E. coli X obtain these beta-lactamase genes?
+
+Look at neighboring regions of the last findings:
+
+- TnpR_1 - Transposon Tn3 resolvase
+- TnpR_2 - Transposon Tn3 resolvase
+
+In the second alignment with pre-annotated file, mobile elements were also present.
+
+[Tn3 resolvase](https://www.uniprot.org/uniprotkb/P0ADI2/entry) is a part of mobile element and may indicate a possible role of mobile genetic elements in **bla** acquisition.
 
 
 ## Conclusion
 
+In this project we performed E. coli X genome assembly and found closest relative using 16s RNA.
+After alignment in Mauve Shiga toxin genes were found (**stxA**, **stxB**), that caused intestinal damage cases we try to investigate. These genes originally belong to *Shigella dysenteriae* and were possibly transferred into genome of E.coli due to lambdoid prophage intervention.
 
+The strain is resistant to some popular antibiotics: streptomycin, amoxicillin, ampicillin, trimethoprim, tetracycline, doxycycline etc. Most of the resisted antibiotics are beta-lactams and we tried to find 
+beta-lactamase genes and explain their acquisition by E. coli. Mobile element proteins were found near the target **bla** genes, proving the transposon hypothesis of acquiring the resistance.
 
 
 
