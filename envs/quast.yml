@@ -1,0 +1,9 @@
+name: quast
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.13
+  - quast
+prefix: /home/lexey/miniconda3/envs/quast

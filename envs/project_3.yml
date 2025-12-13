@@ -1,0 +1,12 @@
+name: project_3
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - fastqc
+  - jellyfish
+  - spades
+  - sra-tools
+  - prokka
+prefix: /home/lexey/miniconda3/envs/project_3
