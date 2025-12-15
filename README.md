@@ -12,7 +12,7 @@ Get the paired-end Illumina reads (forward and reverse respectively):
 wget https://d28rh4a8wq0iu5.cloudfront.net/bioinfo/SRR292678sub_S1_L001_R1_001.fastq.gz
 wget https://d28rh4a8wq0iu5.cloudfront.net/bioinfo/SRR292678sub_S1_L001_R2_001.fastq.gz
 ```
-Fastq run to check the quality:
+Fastqс run to check the quality:
 
 ```bash
 fastqc ./SRR292678sub_S1_L001_R1_001.fastq.gz ./SRR292678sub_S1_L001_R2_001.fastq.gz -o ./output_fastq/
@@ -149,8 +149,11 @@ conda install -c bioconda quast
 
 You can also install additional tools for this version of QUAST.
 <details>
-* GRIDSS (needed for structural variants detection)                                                                                                                                                 
-* SILVA 16S rRNA database (needed for reference genome detection in metagenomic datasets)                                                                                                                
+
+* GRIDSS (needed for structural variants detection)
+
+* SILVA 16S rRNA database (needed for reference genome detection in metagenomic datasets)
+
 * BUSCO tools and databases (needed for searching BUSCO genes) -- works in Linux only! 
 
 But these packages are not related to our task and don't install them.
@@ -177,7 +180,7 @@ Install [sra-tools](https://github.com/ncbi/sra-tools) to handle working with la
 conda install bioconda::sra-tools
 fasterq-dump --split-3 SRR1980038
 ```
-It can take some time because of large filsize, in the end we get this message with info about the downloaded data.
+It can take some time because of large filesize, in the end we get this message with info about the downloaded data.
 ```
 spots read      : 163,482               
 reads read      : 163,482              
@@ -250,6 +253,8 @@ Set the time range using parameter PDAT in the "Entrez Query" field and filter o
 
 ![BLAST ouptut](images/BLAST_result.jpg)
 
+The highest score sequence was downloaded.
+
 Click on the “Sequence ID” link under the name of the identified reference in order to open its corresponding GenBank page. Download the genome sequence in FASTA format (in the right upper corner select ”Send” - “Complete Record” - “File” – “Fasta”, and save as “55989.fasta”)
 
 Get .fasta file using efetch by ID.
@@ -271,7 +276,7 @@ How to use Mauve:
 
 ![Mauve align](images/Mauve_align.png)
 
-Select "Product" and enter keyword "Shiga" to search HUS-related genes.
+Select "Product" and enter keyword "Shiga" to search shiga toxin genes related to HUS.
 ![Mauve search](images/Mauve_search.png)
 
 ![Beta-lactam](images/stxA.jpg)
@@ -333,6 +338,8 @@ Look at neighboring regions of the last findings:
 - TnpR_2 - Transposon Tn3 resolvase
 
 In the second alignment with pre-annotated file, mobile elements were also present.
+
+
 
 [Tn3 resolvase](https://www.uniprot.org/uniprotkb/P0ADI2/entry) is a part of mobile element and may indicate a possible role of mobile genetic elements in **bla** acquisition.
 
