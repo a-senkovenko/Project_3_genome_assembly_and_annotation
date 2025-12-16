@@ -285,19 +285,24 @@ Select "Product" and enter keyword "Shiga" to search shiga toxin genes related t
 ## Step 8. Where is the origin
 
 If there are many "hypothetical proteins" rebuild alignment using another annotation [file](https://disk.yandex.ru/d/aWhOBLVIXR7Oaw).
+Localization of Shiga toxin genes in RAST annotation:
+![RAST](images/RAST.png)
 
+Prophage-associated sequences are highlighted within red boxes.
 Annotated proteins near Shiga-toxin associated genes are:
 
 ```
-unknown protein encoded within prophage CP-933V CDS
 Phage DNA adenine methylase (EC 2.1.1.72) CDS
 Phage antitermination protein Q CDS
 Phage protein NinH CDS
 Phage recombination protein NinG CDS
+Phage transcription redulator cro CDS
 Gifsy-2 prophage protein CDS
 DNA primase, phage associated CDS
+etc...
 ```
 
+Moreover, the tRNA gene is also present near **stx** genes, proving the prophage insertion hypothesis. 
 Therefore, the source of shiga-toxin within our E.coli strain is a phage infection.
 
 ## Step 9. Antibiotic resistance detection
